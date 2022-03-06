@@ -24,6 +24,14 @@ async def on_ready():
 async def forex(ctx, arg):
     from_currency = str(arg)[0:3].upper()
     to_currency = str(arg)[3:6].upper()
-    await ctx.send(get_exchange_rate(from_currency, to_currency))
+    embed = discord.Embed(
+        title=''
+    )
+    try:
+        embed.description = get_exchange_rate(from_currency, to_currency)
+        await ctx.send(embed=embed)
+    except:
+        await ctx.send("Wystąpił błąd")
+
 
 bot.run(os.getenv('TOKEN'))
