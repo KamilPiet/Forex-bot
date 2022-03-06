@@ -1,29 +1,29 @@
 import discord
 import os
 from alpha_vantage.foreignexchange import ForeignExchange
+from discord.ext import commands
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
 
 def get_exchange_rate(from_currency, to_currency):
     fe = ForeignExchange(key=str(os.getenv('ALPHAVANTAGE_API_KEY')))
     data, _ = fe.get_currency_exchange_rate(from_currency=from_currency,
                                             to_currency=to_currency)
-    return data
+    exchange_rate = round(float(data['5. Exchange Rate']), 2)
+    return "{}/{} {}".format(from_currency, to_currency, exchange_rate)
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('Bot {0.user} '.format(client) + ' started')
+    print('Bot {0.user} '.format(bot) + ' started')
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(get_exchange_rate('USD', 'PLN')))
 
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('$'):
-        from_currency = str(message.content)[1:4].upper()
-        to_currency = str(message.content)[4:7].upper()
-        await message.channel.send(str(get_exchange_rate(from_currency, to_currency)))
+@bot.command(name="forex", brief="Provides given currency pair current exchange rate")
+async def forex(ctx, arg):
+    from_currency = str(arg)[0:3].upper()
+    to_currency = str(arg)[3:6].upper()
+    await ctx.send(get_exchange_rate(from_currency, to_currency))
 
-client.run(os.getenv('TOKEN'))
+bot.run(os.getenv('TOKEN'))
