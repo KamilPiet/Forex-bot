@@ -11,7 +11,7 @@ def get_exchange_rate(from_currency, to_currency):
     data, _ = fe.get_currency_exchange_rate(from_currency=from_currency,
                                             to_currency=to_currency)
     exchange_rate = round(float(data['5. Exchange Rate']), 2)
-    return str(from_currency + '/' + to_currency + ' ' + exchange_rate)
+    return "{}/{} {}".format(from_currency, to_currency, exchange_rate)
 
 
 @bot.event
@@ -20,7 +20,7 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(get_exchange_rate('USD', 'PLN')))
 
 
-@bot.command()
+@bot.command(name="forex", brief="Provides given currency pair current exchange rate")
 async def forex(ctx, arg):
     from_currency = str(arg)[0:3].upper()
     to_currency = str(arg)[3:6].upper()
