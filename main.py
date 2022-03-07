@@ -25,7 +25,7 @@ class CustomHelpCommand(commands.HelpCommand):
 
 bot = commands.Bot(command_prefix='!', help_command=CustomHelpCommand)
 
-auto_flag = 0
+auto_flag = False
 
 
 def get_exchange_rate(from_currency, to_currency):
@@ -59,18 +59,11 @@ async def forex(ctx, arg):
 
 @bot.command(name="auto", brief="Turn on or off autoupdating exchange rate in bot status")
 async def auto(ctx, arg):
-    if arg == 1:
-        global auto_flag
-        auto_flag = 1
-    elif arg == 0:
-        global auto_flag
-        auto_flag = 0
-    else:
-        await ctx.send("Wystąpił błąd")
-
+    global auto_flag
+    if bool(arg) != auto_flag:
+        auto_flag = bool(arg)
+    while auto_flag:
+        await asyncio.sleep(2)
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game(get_exchange_rate('BTC', 'USD')))
 
 bot.run(os.getenv('TOKEN'))
-
-while auto_flag:
-    asyncio.sleep(2)
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game(get_exchange_rate('BTC', 'PLN')))
