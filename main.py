@@ -65,11 +65,13 @@ async def forex(ctx, arg):
         await ctx.send("Wystąpił błąd")
 
 
-@bot.command(brief="Toggle auto updating exchange rate in bot status")
+@bot.command(name='auto', brief="Toggle auto updating exchange rate in bot status",
+             description="Current inverval is 1 minute")
 # !auto
-async def auto(ctx, arg):
-    auto_from_currency = 'BTC'
-    auto_to_currency = 'USD'
+async def auto_update(ctx, arg):
+    auto_from_currency = 'USD'
+    auto_to_currency = 'PLN'
+    interval = 60
     global auto_flag
     if bool(arg) != auto_flag:
         auto_flag = bool(arg)
@@ -78,7 +80,7 @@ async def auto(ctx, arg):
         else:
             await ctx.send("Wyłączono automatyczne odświeżanie kursu")
     while auto_flag:
-        await asyncio.sleep(60)
+        await asyncio.sleep(interval)
         exchange_rate = get_exchange_rate(auto_from_currency, auto_to_currency)
         await bot.change_presence(status=discord.Status.online, activity=discord.Game(
                                   format_exchange_rate(auto_from_currency, auto_to_currency, exchange_rate, 0)))
