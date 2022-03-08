@@ -29,11 +29,11 @@ def get_exchange_rate(from_currency, to_currency):
 
 def format_exchange_rate(from_currency, to_currency, exchange_rate, format_type):
     if format_type == 0:
-        return "{]/{} {}".format(from_currency, to_currency, exchange_rate)
+        return "{}/{} {}".format(from_currency, to_currency, exchange_rate)
     elif format_type == 1:
-        return "1 {] = {} {}".format(from_currency, exchange_rate, to_currency)
+        return "1 {} = {} {}".format(from_currency, exchange_rate, to_currency)
     else:
-        return "{]/{} {}".format(from_currency, to_currency, exchange_rate)  # same as format_type = 0
+        return "{}/{} {}".format(from_currency, to_currency, exchange_rate)  # same as format_type = 0
 
 
 @bot.event
