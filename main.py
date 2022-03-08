@@ -5,16 +5,17 @@ from alpha_vantage.foreignexchange import ForeignExchange
 from discord.ext import commands
 
 
-class CustomHelpCommand(commands.MinimalHelpCommand):
-    # !help
-    async def send_pages(self):
-        destination = self.get_destination()
-        for page in self.paginator.pages:
-            embed = discord.Embed(description=page)
-            await destination.send(embed=embed)
-
-
-bot = commands.Bot(command_prefix='!', help_command=CustomHelpCommand)
+# class CustomHelpCommand(commands.MinimalHelpCommand):
+#    # !help
+#    async def send_pages(self):
+#        destination = self.get_destination()
+#        for page in self.paginator.pages:
+#            embed = discord.Embed(description=page)
+#            await destination.send(embed=embed)
+#
+#
+# bot = commands.Bot(command_prefix='!', help_command=CustomHelpCommand)
+bot = commands.Bot(command_prefix='!')
 
 auto_flag = False
 
