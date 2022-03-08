@@ -78,7 +78,7 @@ async def auto(ctx, arg):
         else:
             await ctx.send("Wyłączono automatyczne odświeżanie kursu")
     while auto_flag:
-        await asyncio.sleep(2)
+        await asyncio.sleep(60)
         exchange_rate = get_exchange_rate(auto_from_currency, auto_to_currency)
         await bot.change_presence(status=discord.Status.online, activity=discord.Game(
                                   format_exchange_rate(auto_from_currency, auto_to_currency, exchange_rate, 0)))
