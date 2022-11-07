@@ -1,7 +1,7 @@
 import discord
 import asyncio
 from alphavantage_api import *
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 
 # class CustomHelpCommand(commands.MinimalHelpCommand):
@@ -19,6 +19,8 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 auto_flag = False
+auto_from_currency = 'USD'
+auto_to_currency = 'PLN'
 
 
 def format_exchange_rate(from_currency, to_currency, exchange_rate, format_type):
@@ -33,12 +35,8 @@ def format_exchange_rate(from_currency, to_currency, exchange_rate, format_type)
 @bot.event
 async def on_ready():
     print('Bot {0.user} '.format(bot) + ' started')
-    init_from_currency = 'USD'
-    init_to_currency = 'PLN'
-    exchange_rate = get_current_exchange_rate(init_from_currency, init_to_currency)
-    await bot.change_presence(status=discord.Status.online,
-                              activity=discord.Game(
-                                  format_exchange_rate(init_from_currency, init_to_currency, exchange_rate, 0)))
+    await bot.change_presence(status=discord.Status.do_not_disturb)
+    update_exchange_rate.start()
 
 
 @bot.command(name='now', brief="Provides the current exchange rate of the given currency pair",
@@ -71,9 +69,6 @@ async def print_current_exchange_rate(ctx, arg):
                          "!auto off")
 # !auto
 async def auto_update(ctx, arg):
-    auto_from_currency = 'USD'
-    auto_to_currency = 'PLN'
-    interval = 3600
     global auto_flag
     if arg in ["True", "true", "on", "1"]:
         arg_bool = True
@@ -82,13 +77,21 @@ async def auto_update(ctx, arg):
     if arg_bool != auto_flag:
         auto_flag = arg_bool
         if auto_flag:
-            await ctx.send("Włączono automatyczne odświeżanie kursu {}/{}".format(auto_from_currency, auto_to_currency))
+            await ctx.send("Włączono automatyczne odświeżanie kursu")
+            exchange_rate = get_current_exchange_rate(auto_from_currency, auto_to_currency)
+            await bot.change_presence(status=discord.Status.online, activity=discord.Game(
+                format_exchange_rate(auto_from_currency, auto_to_currency, exchange_rate, 0)))
         else:
             await ctx.send("Wyłączono automatyczne odświeżanie kursu")
-    while auto_flag:
-        await asyncio.sleep(interval)
+            await bot.change_presence(status=discord.Status.do_not_disturb)
+
+
+@tasks.loop(minutes=15)
+async def update_exchange_rate():
+    if auto_flag:
         exchange_rate = get_current_exchange_rate(auto_from_currency, auto_to_currency)
         await bot.change_presence(status=discord.Status.online, activity=discord.Game(
-                                  format_exchange_rate(auto_from_currency, auto_to_currency, exchange_rate, 0)))
+            format_exchange_rate(auto_from_currency, auto_to_currency, exchange_rate, 0)))
+
 
 bot.run(os.getenv('TOKEN'))
