@@ -42,7 +42,8 @@ async def on_ready():
 
 
 @bot.command(name='now', brief="Provides the current exchange rate of the given currency pair",
-             description="Provides the current exchange rate of the given currency pair. \n Example: !now usdpl")
+             description="Provides the current exchange rate of the given currency pair.\n"
+                         "Example: !now usdpl")
 # !now
 async def print_current_exchange_rate(ctx, arg):
 
@@ -63,17 +64,23 @@ async def print_current_exchange_rate(ctx, arg):
 
 
 @bot.command(name='auto', brief="Toggle auto updating exchange rate in bot status",
-             description="Toggle auto updating exchange rate in bot status. \n Current inverval is 1 hour. "
-                         "\n Example: !auto True")
+             description="Toggle auto updating exchange rate in bot status.\n"
+                         "Current inverval is 1 hour.\n"
+                         "Example:\n"
+                         "!auto on\n"
+                         "!auto off")
 # !auto
 async def auto_update(ctx, arg):
     auto_from_currency = 'USD'
     auto_to_currency = 'PLN'
     interval = 3600
     global auto_flag
-    print(bool(arg))
-    if bool(arg) != auto_flag:
-        auto_flag = bool(arg)
+    if arg in ["True", "true", "on", "1"]:
+        arg_bool = True
+    else:
+        arg_bool = False
+    if arg_bool != auto_flag:
+        auto_flag = arg_bool
         if auto_flag:
             await ctx.send("Włączono automatyczne odświeżanie kursu {}/{}".format(auto_from_currency, auto_to_currency))
         else:
