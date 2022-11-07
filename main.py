@@ -41,8 +41,9 @@ async def on_ready():
                                   format_exchange_rate(init_from_currency, init_to_currency, exchange_rate, 0)))
 
 
-@bot.command(name='now', brief="Provides the current exchange rate of the given currency pair")
-# !forex
+@bot.command(name='now', brief="Provides the current exchange rate of the given currency pair",
+             description="Provides the current exchange rate of the given currency pair. \n Example: !now usdpl")
+# !now
 async def print_current_exchange_rate(ctx, arg):
 
     from_currency = str(arg)[0:3].upper()
@@ -62,7 +63,8 @@ async def print_current_exchange_rate(ctx, arg):
 
 
 @bot.command(name='auto', brief="Toggle auto updating exchange rate in bot status",
-             description="Current inverval is 1 hour")
+             description="Toggle auto updating exchange rate in bot status. \n Current inverval is 1 hour. "
+                         "\n Example: !auto True")
 # !auto
 async def auto_update(ctx, arg):
     auto_from_currency = 'USD'
