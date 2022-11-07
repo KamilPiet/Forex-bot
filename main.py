@@ -43,7 +43,7 @@ async def on_ready():
 
 @bot.command(name='now', brief="Provides the current exchange rate of the given currency pair",
              description="Provides the current exchange rate of the given currency pair.\n"
-                         "Example: !now usdpl")
+                         "Example: !now usdpln")
 # !now
 async def print_current_exchange_rate(ctx, arg):
 
