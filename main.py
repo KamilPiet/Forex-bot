@@ -71,6 +71,7 @@ async def auto_update(ctx, arg):
     auto_to_currency = 'PLN'
     interval = 3600
     global auto_flag
+    print(bool(arg))
     if bool(arg) != auto_flag:
         auto_flag = bool(arg)
         if auto_flag:
