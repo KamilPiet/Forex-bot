@@ -62,12 +62,12 @@ async def print_current_exchange_rate(ctx, arg):
 
 
 @bot.command(name='auto', brief="Toggle auto updating exchange rate in bot status",
-             description="Current inverval is 1 minute")
+             description="Current inverval is 1 hour")
 # !auto
 async def auto_update(ctx, arg):
     auto_from_currency = 'USD'
     auto_to_currency = 'PLN'
-    interval = 300
+    interval = 3600
     global auto_flag
     if bool(arg) != auto_flag:
         auto_flag = bool(arg)
